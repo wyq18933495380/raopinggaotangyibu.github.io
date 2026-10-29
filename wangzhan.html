@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高堂一卜食品｜饶平特产菜脯</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft Yahei", system-ui, sans-serif;
+    }
+    :root {
+      --main-green: #224b22;
+      --light-green: #346b34;
+      --accent-red: #c0392b;
+      --bg-page: #f7f5f0;
+      --card-bg: #ffffff;
+      --text-dark: #2d2d2d;
+      --text-gray: #666;
+      --shadow: 0 4px 16px rgba(0,0,0,0.07);
+      --shadow-hover: 0 10px 28px rgba(0,0,0,0.12);
+      --radius: 14px;
+    }
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+    header {
+      background: var(--main-green);
+      color: #fff;
+      padding: 1.2rem 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top:0;
+      z-index: 99;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .logo-text {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 16px;
+      transition: 0.25s;
+      position: relative;
+    }
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-4px;
+      width:0;
+      height:2px;
+      background:#fff;
+      transition:0.3s;
+    }
+    nav a:hover::after{
+      width:100%;
+    }
+    .banner {
+      width: 100%;
+      height: 460px;
+      background: linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url("banner.jpg") center/cover no-repeat;
+      display: flex;
+      flex-direction:column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align:center;
+    }
+    .banner h1 {
+      font-size: 46px;
+      font-weight:bold;
+      margin-bottom:12px;
+      text-shadow: 0 2px 8px #0005;
+    }
+    .banner p{
+      font-size:20px;
+      opacity:0.95;
+      letter-spacing:1px;
+    }
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 70px 24px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 50px;
+      color: var(--main-green);
+      font-weight:600;
+      position:relative;
+    }
+    .section-title::after{
+      content:"";
+      display:block;
+      width:70px;
+      height:3px;
+      background:var(--accent-red);
+      margin:12px auto 0;
+      border-radius:2px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 34px;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: 0.3s ease;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-hover);
+    }
+    .product-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 22px;
+    }
+    .product-name {
+      font-size:17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color:var(--text-dark);
+    }
+    .product-price {
+      color:var(--accent-red);
+      font-size: 22px;
+      font-weight:700;
+    }
+    /* 商品详情弹窗 */
+    .modal-mask {
+      position: fixed;
+      top:0;left:0;right:0;bottom:0;
+      background:rgba(0,0,0,0.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+      padding:24px;
+      animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn{
+      from{opacity:0;}
+      to{opacity:1;}
+    }
+    .modal-box {
+      background:#fff;
+      border-radius:18px;
+      max-width:740px;
+      width:100%;
+      display:flex;
+      flex-wrap:wrap;
+      overflow:hidden;
+      position:relative;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn{
+      from{transform:scale(0.94);opacity:0;}
+      to{transform:scale(1);opacity:1;}
+    }
+    .modal-close {
+      position:absolute;
+      top:20px;
+      right:24px;
+      font-size:32px;
+      cursor:pointer;
+      color:#999;
+      z-index:2;
+      transition:0.2s;
+    }
+    .modal-close:hover{color:#333;}
+    .modal-img-wrap{
+      width:50%;
+    }
+    .modal-img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .modal-text{
+      width:50%;
+      padding:36px;
+    }
+    .modal-text h3{
+      font-size:26px;
+      margin-bottom:14px;
+      color:#222;
+    }
+    .modal-price{
+      color:var(--accent-red);
+      font-size:26px;
+      font-weight:700;
+      margin-bottom:22px;
+    }
+    .modal-desc{
+      color:#555;
+      line-height:1.8;
+      margin-bottom:28px;
+      font-size:15px;
+    }
+    .order-btn{
+      background: linear-gradient(135deg,#d14836,#b12f20);
+      color:#fff;
+      border:none;
+      padding:13px 28px;
+      border-radius:10px;
+      font-size:17px;
+      cursor:pointer;
+      transition:0.25s;
+      font-weight:500;
+    }
+    .order-btn:hover{
+      background: linear-gradient(135deg,#b83c2b,#9c2417);
+      transform:translateY(-2px);
+    }
+    @media(max-width:680px){
+      .modal-img-wrap,.modal-text{
+        width:100%;
+      }
+      .banner h1{font-size:34px;}
+      .banner p{font-size:17px;}
+    }
+    /* 下单表单弹窗 */
+    .order-modal-mask{
+      position:fixed;
+      top:0;left:0;right:0;bottom:0;
+      background:rgba(0,0,0,0.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+      padding:24px;
+      animation: fadeIn 0.25s ease;
+    }
+    .order-modal-box{
+      background:#fff;
+      border-radius:18px;
+      max-width:540px;
+      width:100%;
+      padding:32px;
+      position:relative;
+      animation: popIn 0.3s ease;
+    }
+    .order-modal-close{
+      position:absolute;
+      top:18px;
+      right:22px;
+      font-size:28px;
+      cursor:pointer;
+      color:#999;
+      transition:0.2s;
+    }
+    .order-modal-close:hover{color:#333;}
+    .form-item{
+      margin-bottom:18px;
+    }
+    .form-item label{
+      display:block;
+      margin-bottom:7px;
+      font-weight:500;
+      color:#333;
+    }
+    .form-item input,.form-item textarea{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      font-size:15px;
+      background:#fcfcfc;
+      transition:0.2s;
+    }
+    .form-item input:focus,.form-item textarea:focus{
+      outline:none;
+      border-color:var(--main-green);
+      box-shadow:0 0 0 3px rgba(34,75,34,0.12);
+    }
+    .submit-order{
+      width:100%;
+      background:linear-gradient(135deg,#2c602c,#1d441d);
+      color:#fff;
+      border:none;
+      padding:15px;
+      border-radius:10px;
+      font-size:17px;
+      cursor:pointer;
+      transition:0.25s;
+      font-weight:500;
+    }
+    .submit-order:hover{
+      background:linear-gradient(135deg,#244f24,#183818);
+      transform:translateY(-2px);
+    }
+    .tip-text{
+      margin-top:14px;
+      color:#666;
+      font-size:14px;
+      text-align:center;
+    }
+    .qualify-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:28px;
+      margin-top:24px;
+    }
+    .qualify-card {
+      background:#fff;
+      padding:20px;
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      transition:0.25s;
+    }
+    .qualify-card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow);
+    }
+    .qualify-card img {
+      width:100%;
+      border-radius:10px;
+    }
+    .qualify-card p {
+      text-align:center;
+      margin-top:12px;
+      color:#444;
+      font-weight:500;
+    }
+    .contact-area {
+      background:#fff;
+      padding:48px;
+      border-radius:var(--radius);
+      display:flex;
+      flex-wrap:wrap;
+      gap:48px;
+      align-items:center;
+      justify-content:center;
+      margin-top:40px;
+      box-shadow:var(--shadow);
+    }
+    .qrcode-box img{
+      width:280px;
+      border-radius:12px;
+    }
+    .qrcode-box p{
+      text-align:center;
+      margin-top:14px;
+      font-size:16px;
+      color:#444;
+    }
+    .contact-area h3{
+      font-size:24px;
+      color:#222;
+      margin-bottom:10px;
+    }
+    .contact-area p{
+      font-size:16px;
+      color:#555;
+      line-height:1.9;
+    }
+    footer {
+      background:var(--main-green);
+      color:#fff;
+      text-align:center;
+      padding:32px;
+      margin-top:50px;
+      font-size:15px;
+    }
+    /* 悬浮按钮 */
+    .float-wechat{
+      position:fixed;
+      right:26px;
+      bottom:94px;
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      background:#07c160;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      box-shadow:0 4px 14px #0003;
+      cursor:pointer;
+      z-index:900;
+      transition:0.25s;
+    }
+    .float-wechat:hover{
+      transform:scale(1.08);
+    }
+    .float-top{
+      position:fixed;
+      right:26px;
+      bottom:24px;
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      background:var(--main-green);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      box-shadow:0 4px 14px #0003;
+      cursor:pointer;
+      z-index:900;
+      transition:0.25s;
+    }
+    .float-top:hover{
+      transform:scale(1.08);
+    }
+    /* Toast提示框 */
+    .toast{
+      position:fixed;
+      left:50%;
+      top:30px;
+      transform:translateX(-50%);
+      background:#222;
+      color:#fff;
+      padding:14px 24px;
+      border-radius:10px;
+      z-index:2000;
+      display:none;
+      animation:toastAnim 2.5s ease forwards;
+    }
+    @keyframes toastAnim{
+      0%{opacity:0;top:10px}
+      10%{opacity:1;top:30px}
+      85%{opacity:1;top:30px}
+      100%{opacity:0;top:10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+  <header>
+    <div class="logo-text">高堂一卜食品</div>
+    <nav>
+      <a href="#product">产品</a>
+      <a href="#qualify">企业资质</a>
+      <a href="#contact">联系我们</a>
+    </nav>
+  </header>
+
+  <div class="banner">
+    <h1>饶平名特产 · 高堂菜脯</h1>
+    <p>古法日晒腌制｜地道潮汕风味</p>
+  </div>
+
+  <div class="container" id="product">
+    <h2 class="section-title">产品展示</h2>
+    <div class="product-grid" id="productGrid">
+      <!-- 卡片由JS自动渲染，无需手写HTML卡片 -->
+    </div>
+  </div>
+
+  <!-- 产品详情弹窗 -->
+  <div class="modal-mask" id="modal">
+    <div class="modal-box">
+      <span class="modal-close">&times;</span>
+      <div class="modal-img-wrap">
+        <img class="modal-img" id="modalImg" src="" alt="">
+      </div>
+      <div class="modal-text">
+        <h3 id="modalTitle"></h3>
+        <div class="modal-price" id="modalPrice"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <button class="order-btn" id="openOrderBtn">立即下单</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下单表单弹窗 -->
+  <div class="order-modal-mask" id="orderModal">
+    <div class="order-modal-box">
+      <span class="order-modal-close">&times;</span>
+      <h3 style="margin-bottom:22px">提交订单信息</h3>
+      <div class="form-item">
+        <label>产品名称</label>
+        <input type="text" id="orderProduct" readonly>
+      </div>
+      <div class="form-item">
+        <label>购买数量</label>
+        <input type="number" id="orderNum" min="1" placeholder="请输入购买数量" required>
+      </div>
+      <div class="form-item">
+        <label>您的姓名</label>
+        <input type="text" id="orderName" placeholder="姓名" required>
+      </div>
+      <div class="form-item">
+        <label>手机号码</label>
+        <input type="tel" id="orderPhone" placeholder="手机号" required>
+      </div>
+      <div class="form-item">
+        <label>收货地址</label>
+        <textarea id="orderAddr" rows="2" placeholder="省-市-区-详细地址" required></textarea>
+      </div>
+      <div class="form-item">
+        <label>备注信息</label>
+        <textarea id="orderRemark" rows="2" placeholder="留言、发货要求等（选填）"></textarea>
+      </div>
+      <button class="submit-order" id="copyOrderBtn">复制订单信息，微信发给商家</button>
+      <p class="tip-text">✅ 点击按钮自动复制全部订单，打开微信粘贴发给客服确认订单</p>
+    </div>
+  </div>
+
+  <div class="container" id="qualify">
+    <h2 class="section-title">企业资质</h2>
+    <div class="qualify-wrap">
+      <div class="qualify-card">
+        <img src="cert_business.jpg" alt="营业执照">
+        <p>营业执照</p>
+      </div>
+      <div class="qualify-card">
+        <img src="cert_credit.jpg" alt="守合同重信用企业牌匾">
+        <p>广东省守合同重信用企业</p>
+      </div>
+      <div class="qualify-card">
+        <img src="board_intro.jpg" alt="高堂菜脯发展简介">
+        <p>高堂菜脯发展简介</p>
+      </div>
+      <div class="qualify-card">
+        <img src="factory_sign.jpg" alt="厂区招牌">
+        <p>一卜食品厂区</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="contact">
+    <h2 class="section-title">联系我们</h2>
+    <div class="contact-area">
+      <div class="qrcode-box">
+        <img src="wx_qrcode.jpg" alt="微信二维码">
+        <p>微信扫码联系客服下单</p>
+      </div>
+      <div>
+        <h3>饶平县高堂一卜食品有限公司</h3>
+        <p>产地：广东潮州饶平高堂</p>
+        <p>主营：传统日晒菜脯、虾仁菜脯、陈年老菜脯</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    ©2026 饶平县高堂一卜食品有限公司 版权所有
+  </footer>
+
+  <!-- 悬浮按钮 -->
+  <div class="float-wechat" id="floatWechatBtn">微</div>
+  <div class="float-top" id="backTopBtn">↑</div>
+
+  <script>
+    // =========产品数组，所有商品在此维护=========
+    const productList = [
+      {
+        img:"p01_caipu_tiao.jpg",
+        title:"菜脯条",
+        price:"￥45",
+        desc:"古法日晒腌制，萝卜干厚实香脆，炒菜、煲汤、配粥佳品。传统潮汕小菜，风味地道。"
+      },
+      {
+        img:"p02_old_caipu_plastic.jpg",
+        title:"老菜脯（塑料瓶）",
+        price:"￥45",
+        desc:"陈年腌制老菜脯，塑料瓶装，取用方便，适合日常煲汤、焖肉，风味浓郁。"
+      },
+      {
+        img:"p03_green_box_3flavor.jpg",
+        title:"三味绿色礼盒（菜脯条，虾仁菜脯，香菇菜脯，各两瓶）",
+        price:"￥30",
+        desc:"三色风味组合礼盒，内含菜脯条、虾仁菜脯、香菇菜脯各2瓶，性价比高，适合伴手礼。"
+      },
+      {
+        img:"p04_red_box_3flavor.jpg",
+        title:"三味红色礼盒（虾仁菜脯×3，菜脯条×3，香菇菜脯×2）",
+        price:"￥40",
+        desc:"红色大容量礼盒，虾仁菜脯、菜脯条各3瓶，香菇菜脯2瓶，风味丰富，送礼体面。"
+      },
+      {
+        img:"p05_white_box_shrimp_caipu_6.jpg",
+        title:"白盒虾仁菜脯6瓶装",
+        price:"￥30",
+        desc:"白色礼盒，内含6瓶虾仁菜脯，地道潮汕风味，咸香鲜美，佐粥下饭，自用送礼均可。"
+      },
+      {
+        img:"p06_radish_dry.jpg",
+        title:"萝卜干",
+        price:"￥45",
+        desc:"传统日晒萝卜干，自然风干腌制，咸香脆口，家庭日常炒菜焖肉必备。"
+      },
+      {
+        img:"p07_old_caipu_glass.jpg",
+        title:"老菜脯（玻璃瓶）",
+        price:"￥180",
+        desc:"多年陈放老菜脯，玻璃瓶装锁存风味，色泽深沉醇厚，是潮汕煲汤食疗佳品。"
+      },
+      {
+        img:"p08_yellow_box_shrimp_caipu_12.jpg",
+        title:"黄盒虾仁菜脯12瓶装",
+        price:"￥55",
+        desc:"黄色礼盒内含12瓶虾仁菜脯，大容量包装，适合企业福利、探亲访友送礼。"
+      }
+    ];
+
+    const productGrid = document.getElementById('productGrid');
+    let currentProduct = null;
+    const toast = document.getElementById('toast');
+    function showToast(msg){
+      toast.innerText = msg;
+      toast.style.display="block";
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(()=>{toast.style.display="none"},2400);
+    }
+
+    // 自动渲染产品卡片
+    function renderProducts(){
+      productGrid.innerHTML = '';
+      productList.forEach((item,idx)=>{
+        const card = document.createElement('div');
+        card.className = "product-card";
+        card.dataset.index = idx;
+        card.innerHTML = `
+          <img class="product-img" src="${item.img}" alt="${item.title}">
+          <div class="product-info">
+            <div class="product-name">${item.title}</div>
+            <div class="product-price">${item.price}</div>
+          </div>
+        `;
+        productGrid.appendChild(card);
+        // 绑定点击弹窗事件
+        card.addEventListener('click',()=>{
+          openModal(item);
+        })
+      })
+    }
+
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeBtn = document.querySelector('.modal-close');
+    const openOrderBtn = document.getElementById('openOrderBtn');
+
+    // 下单弹窗
+    const orderModal = document.getElementById('orderModal');
+    const orderModalClose = document.querySelector('.order-modal-close');
+    const orderProduct = document.getElementById('orderProduct');
+    const orderNum = document.getElementById('orderNum');
+    const orderName = document.getElementById('orderName');
+    const orderPhone = document.getElementById('orderPhone');
+    const orderAddr = document.getElementById('orderAddr');
+    const orderRemark = document.getElementById('orderRemark');
+    const copyOrderBtn = document.getElementById('copyOrderBtn');
+
+    function openModal(item){
+      currentProduct = item;
+      modalImg.src = item.img;
+      modalImg.alt = item.title;
+      modalTitle.innerText = item.title;
+      modalPrice.innerText = item.price;
+      modalDesc.innerText = item.desc;
+      modal.style.display = "flex";
+    }
+
+    // 打开下单表单
+    openOrderBtn.onclick = function(){
+      orderProduct.value = currentProduct.title + " " + currentProduct.price;
+      modal.style.display = "none";
+      orderModal.style.display = "flex";
+    }
+
+    // 关闭商品弹窗
+    closeBtn.addEventListener('click',()=>{
+      modal.style.display = "none";
+    })
+    modal.addEventListener('click',(e)=>{
+      if(e.target === modal){
+        modal.style.display = "none";
+      }
+    })
+    // 关闭下单弹窗
+    orderModalClose.onclick = ()=> orderModal.style.display = "none";
+    orderModal.addEventListener('click',(e)=>{
+      if(e.target === orderModal) orderModal.style.display = "none";
+    })
+
+    // 复制订单信息
+    copyOrderBtn.onclick = async function(){
+      if(!orderNum.value || !orderName.value || !orderPhone.value || !orderAddr.value){
+        showToast("请填写完整必填信息！");
+        return;
+      }
+      const orderText = `【新订单】
+产品：${orderProduct.value}
+数量：${orderNum.value}
+姓名：${orderName.value}
+手机：${orderPhone.value}
+地址：${orderAddr.value}
+备注：${orderRemark.value || "无"}`;
+      await navigator.clipboard.writeText(orderText);
+      showToast("✅订单信息复制成功！打开微信粘贴发给客服确认下单！");
+      orderModal.style.display = "none";
+    }
+
+    // 返回顶部
+    const backTopBtn = document.getElementById('backTopBtn');
+    backTopBtn.onclick = ()=> window.scrollTo({top:0,behavior:'smooth'});
+    window.addEventListener('scroll',()=>{
+      backTopBtn.style.display = window.scrollY>200 ? "flex":"none";
+    })
+    //微信悬浮按钮
+    document.getElementById('floatWechatBtn').onclick = ()=>{
+      showToast("请滑动页面到【联系我们】，扫描微信二维码添加客服！");
+    }
+
+    // 导航平滑滚动
+    document.querySelectorAll('nav a').forEach(anchor=>{
+      anchor.addEventListener('click',function(e){
+        e.preventDefault();
+        const targetId=this.getAttribute('href');
+        document.querySelector(targetId).scrollIntoView({behavior:'smooth'})
+      })
+    })
+
+    // 页面加载渲染产品
+    renderProducts();
+  </script>
+</body>
+</html>
